@@ -6,15 +6,11 @@ RUN apt-get update && apt-get install -y curl xz-utils snap ffmpeg unrar php jq 
 
 COPY config/supervisor/* /etc/supervisor/conf.d/
 
-# Install Oracle Java 8 (arm)
-COPY packages/oracle-java/jdk-8u231-linux-arm32-vfp-hflt.tar.gz jdk.tar.gz
-RUN mkdir -p /usr/java && \
-    cd /usr/java && \
-    mv /jdk.tar.gz /usr/java/jdk.tar.gz && \
-    tar -zxvf jdk.tar.gz && \
-    ln -s -f /usr/java/jdk1.8.0_231/bin/java /usr/local/bin/java && \
-    rm /usr/java/jdk.tar.gz
+# Install JDK
+RUN curl -O https://raw.githubusercontent.com/rednoah/java-installer/latest/release/get-java.sh && \
+    sh get-java.sh install
 
+# Install filebot
 RUN mkdir -p /usr/filebot && \
     cd /usr/filebot && \
     curl https://raw.githubusercontent.com/filebot/plugins/master/installer/tar.sh -O && chmod a+x tar.sh && \
